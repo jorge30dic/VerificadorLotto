@@ -93,7 +93,9 @@
         </select>
 
         <label for="tiquetes">Tiquetes de lotería:</label>
-        <textarea id="tiquetes" placeholder="Ingrese los números de los tiquetes de lotería, separados por comas y cada línea representa un tiquete"></textarea>
+        <textarea id="tiquetes" placeholder="Ingrese los números de los tiquetes de lotería, separados por comas y cada línea representa un tiquete. Ejemplo:
+02,25,05,35,18,38
+1,12,20,28,34,39"></textarea>
 
         <button onclick="verificarTiquetes()">Verificar Tiquetes</button>
 
@@ -102,8 +104,8 @@
 
     <script>
         const resultadosPorFecha = {
-            "2024-05-14": [2, 25, 5, 35, 18, 38],
-            "2024-05-11": [17, 7, 3, 8, 35, 25],
+            "2024-05-14": ["02", "25", "05", "35", "18", "38"],
+            "2024-05-11": ["17", "07", "03", "08", "35", "25"],
             // Agrega más resultados de lotería por fecha según sea necesario
         };
 
@@ -129,7 +131,7 @@
 
             let ganancias = "";
             for (let i = 0; i < lineasTiquetes.length; i++) {
-                const numerosTiquete = lineasTiquetes[i].split(",").map(Number);
+                const numerosTiquete = lineasTiquetes[i].split(",").map(num => num.trim().padStart(2, '0'));
                 const aciertos = calcularAciertos(resultados, numerosTiquete);
                 const ganancia = calcularGanancia(aciertos);
                 let emoji = '';
@@ -159,8 +161,8 @@
 
         function calcularAciertos(resultados, tiquete) {
             if (!resultados) return 0; // Si no hay resultados para la fecha seleccionada, no hay aciertos
-            const sortedResultados = resultados.slice().sort((a, b) => a - b);
-            const sortedTiquete = tiquete.slice().sort((a, b) => a - b);
+            const sortedResultados = resultados.slice().sort();
+            const sortedTiquete = tiquete.slice().sort();
             let i = 0;
             let j = 0;
             let aciertos = 0;
