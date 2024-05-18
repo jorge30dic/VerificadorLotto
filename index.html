@@ -48,6 +48,9 @@
             padding: 10px;
             background-color: #e9ecef;
             border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            line-height: 1.5;
         }
         .alert {
             display: none;
@@ -129,7 +132,26 @@
                 const numerosTiquete = lineasTiquetes[i].split(",").map(Number);
                 const aciertos = calcularAciertos(resultados, numerosTiquete);
                 const ganancia = calcularGanancia(aciertos);
-                ganancias += `Tiquete ${i + 1}: ${aciertos} aciertos, Gana: $${ganancia}<br>`;
+                let emoji = '';
+
+                switch (aciertos) {
+                    case 3:
+                        emoji = '🎉';
+                        break;
+                    case 4:
+                        emoji = '🏅';
+                        break;
+                    case 5:
+                        emoji = '🥇';
+                        break;
+                    case 6:
+                        emoji = '💰';
+                        break;
+                    default:
+                        emoji = '😢';
+                }
+
+                ganancias += `Tiquete ${i + 1}: ${aciertos} aciertos, Gana: $${ganancia} ${emoji}<br>`;
             }
 
             document.getElementById("resultado").innerHTML = ganancias;
