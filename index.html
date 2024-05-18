@@ -85,7 +85,13 @@
                 return;
             }
 
-            const tiquetesInput = document.getElementById("tiquetes").value;
+            const tiquetesInput = document.getElementById("tiquetes").value.trim();
+
+            if (!tiquetesInput) {
+                alert("Por favor, ingrese al menos un tiquete de lotería.");
+                return;
+            }
+
             const lineasTiquetes = tiquetesInput.split("\n");
 
             let ganancias = "";
