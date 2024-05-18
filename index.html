@@ -8,46 +8,84 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         label {
             font-weight: bold;
+            display: block;
+            margin-top: 20px;
         }
-        textarea {
-            width: 400px;
-            height: 150px;
+        textarea, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #resultado {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <h1>Verificador de Tiquetes Lotto Panama</h1>
-    <label for="fecha">Seleccione la fecha de la lotería:</label><br>
-    <select id="fecha">
-        <option value="2024-05-14">14 de Mayo, 2024</option>
-        <option value="2024-05-11">11 de Mayo, 2024</option>
-        <!-- Agrega más opciones de fecha según sea necesario -->
-    </select><br><br>
+    <div class="container">
+        <h1>Verificador de Tiquetes Lotto Panama</h1>
+        <label for="fecha">Seleccione la fecha de la lotería:</label>
+        <select id="fecha">
+            <option value="2024-05-14">14 de Mayo, 2024</option>
+            <option value="2024-05-11">11 de Mayo, 2024</option>
+            <!-- Agrega más opciones de fecha según sea necesario -->
+        </select>
 
-    <label for="tiquetes">Tiquetes de lotería:</label><br>
-    <textarea id="tiquetes" placeholder="Ingrese los números de los tiquetes de lotería, separados por comas y cada línea representa un tiquete"></textarea><br><br>
+        <label for="tiquetes">Tiquetes de lotería:</label>
+        <textarea id="tiquetes" placeholder="Ingrese los números de los tiquetes de lotería, separados por comas y cada línea representa un tiquete"></textarea>
 
-    <button onclick="verificarTiquetes()">Verificar Tiquetes</button><br><br>
+        <button onclick="verificarTiquetes()">Verificar Tiquetes</button>
 
-    <div id="resultado"></div>
+        <div id="resultado"></div>
+    </div>
 
     <script>
         const resultadosPorFecha = {
-            "2024-05-14": [2,25,5,35,18,38],
-            "2024-05-11": [17,7,3,8,35,25],
+            "2024-05-14": [2, 25, 5, 35, 18, 38],
+            "2024-05-11": [17, 7, 3, 8, 35, 25],
             // Agrega más resultados de lotería por fecha según sea necesario
         };
 
         function verificarTiquetes() {
             const fechaSeleccionada = document.getElementById("fecha").value;
             const resultados = resultadosPorFecha[fechaSeleccionada];
-            const resultadosInput = resultados ? resultados.join(",") : "";
+
+            if (!resultados) {
+                document.getElementById("resultado").innerHTML = "No hay resultados disponibles para la fecha seleccionada.";
+                return;
+            }
 
             const tiquetesInput = document.getElementById("tiquetes").value;
-
             const lineasTiquetes = tiquetesInput.split("\n");
 
             let ganancias = "";
