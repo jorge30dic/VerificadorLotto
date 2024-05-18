@@ -49,11 +49,39 @@
             background-color: #e9ecef;
             border-radius: 4px;
         }
+        .alert {
+            display: none;
+            padding: 20px;
+            background-color: #f44336;
+            color: white;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .alert.show {
+            display: block;
+        }
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .closebtn:hover {
+            color: black;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Verificador de Tiquetes Lotto Panama</h1>
+        <div id="alert" class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            Por favor, ingrese al menos un tiquete de lotería.
+        </div>
         <label for="fecha">Seleccione la fecha de la lotería:</label>
         <select id="fecha">
             <option value="2024-05-14">14 de Mayo, 2024</option>
@@ -88,8 +116,10 @@
             const tiquetesInput = document.getElementById("tiquetes").value.trim();
 
             if (!tiquetesInput) {
-                alert("Por favor, ingrese al menos un tiquete de lotería.");
+                document.getElementById("alert").classList.add("show");
                 return;
+            } else {
+                document.getElementById("alert").classList.remove("show");
             }
 
             const lineasTiquetes = tiquetesInput.split("\n");
