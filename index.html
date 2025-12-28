@@ -8,105 +8,26 @@
     <link rel="icon" href="https://lotto-panama.com/wp-content/uploads/2024/04/Logo-Lotto-FAVICON-WEB-5-150x150.png" sizes="32x32">
     <link rel="icon" href="https://lotto-panama.com/wp-content/uploads/2024/04/Logo-Lotto-FAVICON-WEB-5-300x300.png" sizes="192x192">
     <link rel="apple-touch-icon" href="https://lotto-panama.com/wp-content/uploads/2024/04/Logo-Lotto-FAVICON-WEB-5-300x300.png">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f0f0f0;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f0f0f0; }
+        h1 { text-align: center; color: #333; }
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fff;
+            border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 20px;
+        textarea, select, button {
+            width: calc(100% - 24px); padding: 10px; margin-top: 10px;
+            border: 1px solid #ccc; border-radius: 4px; font-size: 16px;
         }
-
-        textarea,
-        select,
-        button {
-            width: calc(100% - 24px);
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        textarea {
-            height: 200px;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        #resultado {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-
-        .acierto {
-            color: #0a8a0a;
-            font-weight: bold;
-        }
-
-        .error {
-            color: #c30000;
-            font-weight: bold;
-        }
-
-        .alert {
-            display: none;
-            padding: 20px;
-            background-color: #f44336;
-            color: white;
-            margin-bottom: 15px;
-            border-radius: 4px;
-        }
-
-        .alert.show {
-            display: block;
-        }
-
-        .closebtn {
-            margin-left: 15px;
-            color: white;
-            font-weight: bold;
-            float: right;
-            font-size: 22px;
-            line-height: 20px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .closebtn:hover {
-            color: black;
+        button { background-color: #007bff; color: white; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #resultado { margin-top: 20px; padding: 10px; background-color: #e9ecef; border-radius: 4px; }
+        .acierto { color: #0a8a0a; font-weight: bold; }
+        .error { color: #c30000; font-weight: bold; }
+        #totalGanancia {
+            margin-top: 15px; padding: 10px; background-color: #fff8c4; border: 2px solid #ffdd57;
+            border-radius: 6px; font-size: 18px; font-weight: bold; text-align: center;
         }
     </style>
 </head>
@@ -114,10 +35,6 @@
 <body>
     <div class="container">
         <h1>Verificador de Tiquetes Lotto Panama</h1>
-        <div id="alert" class="alert">
-            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-            Por favor, ingrese al menos un tiquete de lotería.
-        </div>
 
         <label for="fecha">Seleccione la fecha de la lotería:</label>
         <select id="fecha">
@@ -137,7 +54,9 @@
 01,12,20,28,34,39"></textarea>
 
         <button onclick="verificarTiquetes()">Verificar Tiquetes</button>
+
         <div id="resultado"></div>
+        <div id="totalGanancia"></div>
     </div>
 
     <script>
@@ -153,48 +72,48 @@
         };
 
         function verificarTiquetes() {
-            const fechaSeleccionada = document.getElementById("fecha").value;
-            const resultados = resultadosPorFecha[fechaSeleccionada];
+            const fecha = document.getElementById("fecha").value;
+            const resultados = resultadosPorFecha[fecha];
+            const texto = document.getElementById("tiquetes").value.trim();
 
-            const tiquetesInput = document.getElementById("tiquetes").value.trim();
-            if (!tiquetesInput) {
-                document.getElementById("alert").classList.add("show");
-                return;
-            }
-            document.getElementById("alert").classList.remove("show");
+            if (!texto) return alert("Ingrese tiquetes primero.");
 
-            const lineas = tiquetesInput.split("\n");
+            const lineas = texto.split("\n");
             let salida = "";
+            let totalGanado = 0;
 
-            for (let i = 0; i < lineas.length; i++) {
-                const numeros = lineas[i].split(",").map(n => n.trim().padStart(2, '0'));
-                const aciertos = numeros.filter(n => resultados.includes(n)).length;
+            lineas.forEach((linea, i) => {
+                const nums = linea.split(",").map(n => n.trim().padStart(2,'0'));
+                const aciertos = nums.filter(n => resultados.includes(n)).length;
                 const ganancia = calcularGanancia(aciertos);
+                totalGanado += ganancia;
 
-                const detalle = numeros.map(num =>
-                    resultados.includes(num)
-                        ? `<span class="acierto">${num}</span>`
-                        : `<span class="error">${num}</span>`
+                const detalle = nums.map(num =>
+                    resultados.includes(num) ? `<span class="acierto">${num}</span>` :
+                                                `<span class="error">${num}</span>`
                 ).join(", ");
 
-                let emoji = aciertos >= 3 ? "🎉" : "😢";
+                const emoji = aciertos >= 3 ? "🎉" : "😢";
 
                 salida += `
                     <strong>Tiquete ${i + 1}:</strong> ${detalle} <br>
-                    <strong>Aciertos:</strong> ${aciertos} |
+                    <strong>Aciertos:</strong> ${aciertos} | 
                     <strong>Gana:</strong> $${ganancia} ${emoji}
-                    <br><br>`;
-            }
+                    <br><br>
+                `;
+            });
 
             document.getElementById("resultado").innerHTML = salida;
+            document.getElementById("totalGanancia").innerHTML =
+                `💰 <strong>GANANCIA TOTAL ACUMULADA: $${totalGanado}</strong>`;
         }
 
-        function calcularGanancia(aciertos) {
-            return aciertos === 3 ? 5 :
-                aciertos === 4 ? 50 :
-                aciertos === 5 ? 1500 :
-                aciertos === 6 ? 500000 :
-                0;
+        function calcularGanancia(a) {
+            return a === 3 ? 5 :
+                   a === 4 ? 50 :
+                   a === 5 ? 1500 :
+                   a === 6 ? 500000 :
+                   0;
         }
     </script>
 </body>
